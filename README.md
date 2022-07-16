@@ -1,6 +1,6 @@
  # Primer Examen Parcial de Desarrollo de Software I
 
-> Carga archivos csv y xlsx para que despues muestre los alumnos que no seran turorados en el 2022-1 y los alumno nuevos para tutoria
+> Carga archivos csv y xlsx para que despues muestrar los alumnos que no seran turorados en el 2022-1 y los alumnos nuevos para tutoria
 
 
 ## Tecnologías
