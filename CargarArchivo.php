@@ -21,9 +21,9 @@
         $spreadsheet = $reader_csv->load($dir);
         $rows = $spreadsheet->getActiveSheet()->toArray();
         for($i=0;$i<count($rows);$i++){
-            if($rows[$i][0]==""||!is_numeric($rows[$i][0]))continue;
-            $codigo=$rows[$i][0];
-            $nombres=$rows[$i][1];
+            if($rows[$i][1]==""||!is_numeric($rows[$i][1]))continue;
+            $codigo=$rows[$i][1];
+            $nombres=$rows[$i][2];
             $nombres=str_replace("'","''",$nombres);
             $sql.="('$codigo','$nombres')";
             $sql.=",";
