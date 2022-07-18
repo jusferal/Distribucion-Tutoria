@@ -7,6 +7,12 @@
 * PHP
 * Mysql
 
+## Pasos para la ejecución
+* crear la base de datos en phpMyAdmin con el nombre: bd_tutorados
+* subir el archivo Tutoria.sql
+* subir los archivos de entrada
+* Realizar las consultas disponibles
+
 ## Screenshots
 ### Cargar datos
 ![ScreenShot](https://github.com/wildkite/Distribucion-Tutoria/blob/main/screenshots/ingresar.png)
