@@ -20,7 +20,8 @@
         $reader_csv->setSheetIndex(0);
         $spreadsheet = $reader_csv->load($dir);
         $rows = $spreadsheet->getActiveSheet()->toArray();
-        for($i=0;$i<count($rows);$i++){
+        $total=0;
+        for($i=0;$i<count($rows) ;$i++){
             if($rows[$i][1]==""||!is_numeric($rows[$i][1]))continue;
             $codigo=$rows[$i][1];
             $nombres=$rows[$i][2];
@@ -32,7 +33,7 @@
     else {
         $spreadsheet = $reader_excel->load($dir);
         $rows=$spreadsheet->getSheet(0)->toArray();
-        for($i=0;$i<count($rows);$i++){
+        for($i=0;$i<count($rows) ;$i++){
             if($rows[$i][1]==""||!is_numeric($rows[$i][1]))continue;
             $codigo=$rows[$i][1];
             $nombres=$rows[$i][2];
@@ -55,7 +56,7 @@
         $reader_csv->setSheetIndex(0);
         $spreadsheet = $reader_csv->load($dir);
         $rows = $spreadsheet->getActiveSheet()->toArray();
-        for($i=0;$i<count($rows);$i++){
+        for($i=0;$i<count($rows) ;$i++){
             if($rows[$i][0]==""||!is_numeric($rows[$i][0]))continue;
             $codigo=$rows[$i][0];
             $nombres=$rows[$i][1];
