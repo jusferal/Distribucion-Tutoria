@@ -9,7 +9,7 @@ include('includes/header.php');
       <form enctype="multipart/form-data" method="POST" action="CargarArchivo.php" role="form"> 
         <h2>Cargar Datos</h2>
         <div class="form-group row">
-          <label for="upload" class="col-sm-4 col-form-label">Cargar alumnos antiguos</label> 
+          <label for="upload" class="col-sm-4 col-form-label">Cargar Distribucion antigua</label> 
           <div class="col-sm-8">
             <input type="file" name="alumnos_antiguos" accept=".xls,.xlsx,.csv"> 
           </div>
