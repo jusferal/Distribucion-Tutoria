@@ -15,10 +15,16 @@ include('includes/header.php');
           </div>
         </div>
         <div class="form-group row">
-        <label for="upload" class="col-sm-4 col-form-label">Cargar alumnos matriculados en el semestre 2022-1</label> 
-        <div class="col-sm-8">
-          <input type="file" name="alumnos_nuevos" accept=".xls,.xlsx,.csv"> 
+          <label for="upload" class="col-sm-4 col-form-label">Cargar alumnos matriculados en el semestre 2022-1</label> 
+          <div class="col-sm-8">
+            <input type="file" name="alumnos_nuevos" accept=".xls,.xlsx,.csv"> 
+          </div>
         </div>
+        <div class="form-group row">
+          <label for="upload" class="col-sm-4 col-form-label">Cargar docentes para el semestre 2022-1</label> 
+          <div class="col-sm-8">
+            <input type="file" name="docentes" accept=".xls,.xlsx,.csv"> 
+          </div>
         </div>
         <input class="btn btn-success my-2 my-sm-0" type="submit" name="submit_files" value="Subir"> 
       </form>

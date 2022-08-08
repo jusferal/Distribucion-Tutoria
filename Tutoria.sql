@@ -24,8 +24,14 @@ CREATE TABLE `matriculados_2022` (
 
 CREATE TABLE `distribucion_tutoria` (
   `cod_estudiante` int(11) NOT NULL,
-  `nombres_apellidos` varchar(20) NOT NULL
+  `nombres_apellidos` varchar(20) NOT NULL,
+  `nombres_apellidos_docente` varchar(20) NOT NULL
+
 );
 
+CREATE TABLE `docentes` (
+  `nombres_apellidos` varchar(20) NOT NULL,
+  `categoria` varchar(11) NOT NULL
+);
 --
 --
