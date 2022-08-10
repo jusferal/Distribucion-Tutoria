@@ -146,13 +146,7 @@ function get_pref_cod($codigo){
             echo "<td>".$nueva_distribucion[$i][2]."</td>";
             echo "</tr>";
           }
-          if (isset($_POST['exportar'])) {
-            $nombrearchivo = "Nueva_Distribucion" . ".csv";  
-            foreach($nueva_distribucion as $item){
-              fputscsv($nombrearchivo,$item);
-            }
-            header("Content-Disposition: attachment; filename=$nombrearchivo");
-          }
+          
       }
     }
     ?>

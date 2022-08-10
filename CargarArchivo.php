@@ -8,110 +8,73 @@
  
  function LeerMatriculados_2022($dir){
     $ext = pathinfo($dir, PATHINFO_EXTENSION);
+    if($ext=='csv'){
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+        $reader->setInputEncoding('CP1252');
+    }
+    else  $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+    $spreadsheet = $reader->load($dir);
+    $rows=$spreadsheet->getSheet(0)->toArray();
+
     $con=conectar();
     $sql="INSERT INTO  matriculados_2022  VALUES";
-    if($ext=='csv'){
-        $reader_csv = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
-        $reader_csv->setInputEncoding('CP1252');
-        $reader_csv->setSheetIndex(0);
-        $spreadsheet = $reader_csv->load($dir);
-        $rows = $spreadsheet->getActiveSheet()->toArray();
-        for($i=0;$i<count($rows) ;$i++){
-            if($rows[$i][1]==""||!is_numeric($rows[$i][1]))continue;
-            $codigo=$rows[$i][1];
-            $nombres=$rows[$i][2];
-            $nombres=str_replace("'","''",$nombres);
-            $sql.="('$codigo','$nombres')";
-            $sql.=",";
-        }
-    }
-    else {
-        $reader_excel = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-        $spreadsheet = $reader_excel->load($dir);
-        $rows=$spreadsheet->getSheet(0)->toArray();
-        for($i=0;$i<count($rows) ;$i++){
-            if($rows[$i][1]==""||!is_numeric($rows[$i][1]))continue;
-            $codigo=$rows[$i][1];
-            $nombres=$rows[$i][2];
-            $nombres=str_replace("'","''",$nombres);
-            $sql.="('$codigo','$nombres')";
-            $sql.=",";
-        }
+    for($i=0;$i<count($rows) ;$i++){
+        if($rows[$i][1]==""||!is_numeric($rows[$i][1]))continue;
+        $codigo=$rows[$i][1];
+        $nombres=$rows[$i][2];
+        $nombres=str_replace("'","''",$nombres);
+        $sql.="('$codigo','$nombres')";
+        $sql.=",";
     }
     $sql=substr($sql, 0, -1);
     $query= mysqli_query($con,$sql);
  }
  function LeerTutores_Alumnos($dir){
     $ext = pathinfo($dir, PATHINFO_EXTENSION);
+    if($ext=='csv'){
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+        $reader->setInputEncoding('CP1252');
+    }
+    else  $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+    $spreadsheet = $reader->load($dir);
+    $rows=$spreadsheet->getSheet(0)->toArray();
+
     $con=conectar();
     $sql="INSERT INTO  distribucion_tutoria  VALUES";
-    if($ext=='csv'){
-        $reader_csv = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
-        $reader_csv->setInputEncoding('CP1252');
-        $reader_csv->setSheetIndex(0);
-        $spreadsheet = $reader_csv->load($dir);
-        $rows = $spreadsheet->getActiveSheet()->toArray();
-        for($i=0;$i<count($rows) ;$i++){
-            if(str_contains($rows[$i][0],'Docente')){
-                $docente=$rows[$i][1];
-            }
-            if($rows[$i][0]==""||!is_numeric($rows[$i][0]))continue;
-            $codigo=$rows[$i][0];
-            $nombres=$rows[$i][1];
-            $nombres=str_replace("'","''",$nombres);
-            $docente=str_replace("'","''",$docente);
-            $sql.="('$codigo','$nombres','$docente')";
-            $sql.=",";
-        }
-    }
-    else {
-        $reader_excel = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-        $spreadsheet = $reader_excel->load($dir);
-        $rows=$spreadsheet->getSheet(0)->toArray();
-        for($i=0;$i<count($rows) ;$i++){
-            if($rows[$i][0]==""||!is_numeric($rows[$i][0]))continue;
-            $codigo=$rows[$i][0];
-            $nombres=$rows[$i][1];
-            $nombres=str_replace("'","''",$nombres);
-            $sql.="('$codigo','$nombres')";
-            $sql.=",";
-        }
+    for($i=0;$i<count($rows) ;$i++){
+        if(str_contains($rows[$i][0],'Docente')) $docente=$rows[$i][1];
+        if($rows[$i][0]==""||!is_numeric($rows[$i][0]))continue;
+        $codigo=$rows[$i][0];
+        $nombres=$rows[$i][1];
+        $nombres=str_replace("'","''",$nombres);
+        $docente=str_replace("'","''",$docente);
+        $sql.="('$codigo','$nombres','$docente')";
+        $sql.=",";
     }
     $sql=substr($sql, 0, -1);
     $query= mysqli_query($con,$sql);
  }
  function LeerDocentes_2022($dir){
     $ext = pathinfo($dir, PATHINFO_EXTENSION);
+    if($ext=='csv'){
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+        $reader->setInputEncoding('CP1252');
+    }
+    else  $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+    $spreadsheet = $reader->load($dir);
+    $rows=$spreadsheet->getSheet(0)->toArray();
+
     $con=conectar();
     $sql="INSERT INTO  docentes  VALUES";
-    if($ext=='csv'){
-        $reader_csv = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
-        $reader_csv->setInputEncoding('CP1252');
-        $reader_csv->setSheetIndex(0);
-        $spreadsheet = $reader_csv->load($dir);
-        $rows = $spreadsheet->getActiveSheet()->toArray();
-        for($i=0;$i<count($rows) ;$i++){
-            if($rows[$i][1]=="")continue;
-            $nombres=$rows[$i][1];
-            $categoria=$rows[$i][2];
-            $nombres=str_replace("'","''",$nombres);
-            $sql.="('$nombres','$categoria')";
-            $sql.=",";
-        }
+    for($i=0;$i<count($rows) ;$i++){
+        if($rows[$i][1]=="")continue;
+        $nombres=$rows[$i][1];
+        $categoria=$rows[$i][2];
+        $nombres=str_replace("'","''",$nombres);
+        $sql.="('$nombres','$categoria')";
+        $sql.=",";
     }
-    else {
-        $reader_excel = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-        $spreadsheet = $reader_excel->load($dir);
-        $rows=$spreadsheet->getSheet(0)->toArray();
-        for($i=0;$i<count($rows) ;$i++){
-            if($rows[$i][1]=="")continue;
-            $nombres=$rows[$i][1];
-            $categoria=$rows[$i][2];
-            $nombres=str_replace("'","''",$nombres);
-            $sql.="('$nombres','$categoria')";
-            $sql.=",";
-        }
-    }
+    
     $sql=substr($sql, 0, -1);
     $query= mysqli_query($con,$sql);
  }
