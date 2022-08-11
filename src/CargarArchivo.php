@@ -1,22 +1,14 @@
 <?php
- //require('librerias/php-excel-reader/excel_reader2.php');
- //require('librerias/SpreadsheetReader.php');
- //require('PHPExcel/Classes/PHPExcel.php');
  include("conexion.php");
- require 'vendor/autoload.php';
+ require '../vendor/autoload.php';
  use PhpOffice\PhpSpreadsheet\Spreadsheet;
  
- function LeerMatriculados_2022($dir){
-    $ext = pathinfo($dir, PATHINFO_EXTENSION);
-    if($ext=='csv'){
-        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
-        $reader->setInputEncoding('CP1252');
-    }
+ function LeerMatriculados_2022($archivo,$extension){
+    if($extension=='csv') $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
     else  $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-    $spreadsheet = $reader->load($dir);
+    $spreadsheet = $reader->load($archivo);
     $rows=$spreadsheet->getSheet(0)->toArray();
 
-    $con=conectar();
     $sql="INSERT INTO  matriculados_2022  VALUES";
     for($i=0;$i<count($rows) ;$i++){
         if($rows[$i][1]==""||!is_numeric($rows[$i][1]))continue;
@@ -27,19 +19,15 @@
         $sql.=",";
     }
     $sql=substr($sql, 0, -1);
+    $con=conectar();
     $query= mysqli_query($con,$sql);
  }
- function LeerTutores_Alumnos($dir){
-    $ext = pathinfo($dir, PATHINFO_EXTENSION);
-    if($ext=='csv'){
-        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
-        $reader->setInputEncoding('CP1252');
-    }
+ function LeerTutores_Alumnos($archivo,$extension){
+    if($extension=='csv') $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
     else  $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-    $spreadsheet = $reader->load($dir);
+    $spreadsheet = $reader->load($archivo);
     $rows=$spreadsheet->getSheet(0)->toArray();
 
-    $con=conectar();
     $sql="INSERT INTO  distribucion_tutoria  VALUES";
     for($i=0;$i<count($rows) ;$i++){
         if(str_contains($rows[$i][0],'Docente')) $docente=$rows[$i][1];
@@ -52,19 +40,15 @@
         $sql.=",";
     }
     $sql=substr($sql, 0, -1);
+    $con=conectar();
     $query= mysqli_query($con,$sql);
  }
- function LeerDocentes_2022($dir){
-    $ext = pathinfo($dir, PATHINFO_EXTENSION);
-    if($ext=='csv'){
-        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
-        $reader->setInputEncoding('CP1252');
-    }
+ function LeerDocentes_2022($archivo,$extension){
+    if($extension=='csv') $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
     else  $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-    $spreadsheet = $reader->load($dir);
+    $spreadsheet = $reader->load($archivo);
     $rows=$spreadsheet->getSheet(0)->toArray();
 
-    $con=conectar();
     $sql="INSERT INTO  docentes  VALUES";
     for($i=0;$i<count($rows) ;$i++){
         if($rows[$i][1]=="")continue;
@@ -76,27 +60,25 @@
     }
     
     $sql=substr($sql, 0, -1);
+    $con=conectar();
     $query= mysqli_query($con,$sql);
  }
 if ( isset($_POST['submit_files'])) {
-    $direccion1='archivos/';
-    $direccion2='archivos/';
-    $direccion3='archivos/';
     if ( isset($_FILES['alumnos_antiguos']['name']) && $_FILES['alumnos_antiguos']['name'] != "" ) {
-        $direccion1 = 'archivos/'.basename($_FILES['alumnos_antiguos']['name']);
-        move_uploaded_file($_FILES['alumnos_antiguos']['tmp_name'], $direccion1);
+        $archivo=$_FILES['alumnos_antiguos']['tmp_name'];
+        $extension = pathinfo($_FILES['alumnos_antiguos']['name'], PATHINFO_EXTENSION);
+        LeerTutores_Alumnos($archivo,$extension);
     }
     if ( isset($_FILES['alumnos_nuevos']['name']) && $_FILES['alumnos_nuevos']['name'] != "" ) {
-        $direccion2 = 'archivos/'.basename($_FILES['alumnos_nuevos']['name']);
-        move_uploaded_file($_FILES['alumnos_nuevos']['tmp_name'], $direccion2);
+        $archivo=$_FILES['alumnos_nuevos']['tmp_name'];
+        $extension = pathinfo($_FILES['alumnos_nuevos']['name'], PATHINFO_EXTENSION);
+        LeerMatriculados_2022($archivo,$extension);
     }
     if ( isset($_FILES['docentes']['name']) && $_FILES['docentes']['name'] != "" ) {
-        $direccion3 = 'archivos/'.basename($_FILES['docentes']['name']);
-        move_uploaded_file($_FILES['docentes']['tmp_name'], $direccion3);
+        $archivo=$_FILES['docentes']['tmp_name'];
+        $extension = pathinfo($_FILES['docentes']['name'], PATHINFO_EXTENSION);
+        LeerDocentes_2022($archivo,$extension);
     }
-    LeerMatriculados_2022($direccion2);
-    LeerTutores_Alumnos($direccion1);
-    LeerDocentes_2022($direccion3);
     header('Location: alumnos.php');
     }
 ?>

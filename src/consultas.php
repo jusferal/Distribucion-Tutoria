@@ -5,7 +5,7 @@ function get_pref_cod($codigo){
     else if(strlen($codigo)==5) return "0".$codigo[0];
     return "00";
 }
-if ( isset($_POST['exportar_distribucion'])) {
+function distribucion_balanceada(){
     $con=conectar();
     $sql1="SELECT DISTINCT * FROM matriculados_2022  WHERE cod_estudiante not in( SELECT cod_estudiante FROM distribucion_tutoria ); ";
     $query_alumnos_nuevos=mysqli_query($con,$sql1);
@@ -60,29 +60,17 @@ if ( isset($_POST['exportar_distribucion'])) {
             if($cantidad==$num_max_alum+$add)$resto--;
         }
     }
-    $nombrearchivo = "Nueva_Distribucion.csv";  
-    $out = fopen('php://memory', 'w'); 
-    foreach($nueva_distribucion as $item){
-        fputcsv($out,$item);
-    }
-    fseek($out, 0);
-    header('Content-Type: text/csv');
-    header('Content-Disposition: attachment; filename="'.$nombrearchivo.'";');
-    fpassthru($out);
-    }
-if ( isset($_POST['exportar_alumnos'])) {
+    return $nueva_distribucion;
+}
+function no_matriculados(){
     $con=conectar();
     $sql="SELECT DISTINCT * FROM distribucion_tutoria D WHERE D.cod_estudiante not in( SELECT cod_estudiante FROM matriculados_2022 ); ";
     $query=mysqli_query($con,$sql);
-    $i=1;
-    $nombrearchivo = "Alumnos_no_matriculados.csv";  
-    $out = fopen('php://memory', 'w'); 
-    while($row = mysqli_fetch_assoc($query)) { 
-        fputcsv($out,[$row['cod_estudiante'],$row['nombres_apellidos']]);
-    }       
-    fseek($out, 0);
-    header('Content-Type: text/csv');
-    header('Content-Disposition: attachment; filename="'.$nombrearchivo.'";');
-    fpassthru($out);
-    }
+    return $query;
+}
+function alumnos_sin_tutor(){
+    $con=conectar();
+    $sql="SELECT DISTINCT * FROM matriculados_2022  WHERE cod_estudiante not in( SELECT cod_estudiante FROM distribucion_tutoria ); ";
+    $query=mysqli_query($con,$sql);
+}
 ?>
