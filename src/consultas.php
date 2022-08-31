@@ -5,28 +5,36 @@ function get_pref_cod($codigo){
     else if(strlen($codigo)==5) return "0".$codigo[0];
     return "00";
 }
+function no_matriculados(){
+    $con=conectar();
+    $sql="SELECT DISTINCT cod_estudiante,nombres_apellidos FROM distribucion_tutoria D WHERE D.cod_estudiante not in( SELECT cod_estudiante FROM matriculados_2022 ); ";
+    $query=mysqli_query($con,$sql);
+    return mysqli_fetch_all($query);
+}
+function alumnos_sin_tutor(){
+    $con=conectar();
+    $sql="SELECT DISTINCT * FROM matriculados_2022  WHERE cod_estudiante not in( SELECT cod_estudiante FROM distribucion_tutoria ); ";
+    $query=mysqli_query($con,$sql);
+    return mysqli_fetch_all($query);
+}
 function distribucion_balanceada(){
     $con=conectar();
-    $sql1="SELECT DISTINCT * FROM matriculados_2022  WHERE cod_estudiante not in( SELECT cod_estudiante FROM distribucion_tutoria ); ";
-    $query_alumnos_nuevos=mysqli_query($con,$sql1);
-    $sql2=$sql="SELECT DISTINCT * FROM distribucion_tutoria D WHERE D.cod_estudiante  in( SELECT cod_estudiante FROM matriculados_2022 ); ";
-    $query_alumnos_con_tutor=mysqli_query($con,$sql2);
-    $sql3="SELECT DISTINCT * FROM  docentes";
-    $query_docente=mysqli_query($con,$sql3);
-    $sql4=$sql="SELECT DISTINCT * FROM matriculados_2022 ";
-    $query_alumnos=mysqli_query($con,$sql4);
+    $sql="SELECT DISTINCT * FROM distribucion_tutoria D WHERE D.cod_estudiante  in( SELECT cod_estudiante FROM matriculados_2022 ); ";
+    $alumnos_con_tutor=mysqli_query($con,$sql);
+    $sql="SELECT DISTINCT * FROM  docentes";
+    $docentes=mysqli_query($con,$sql);
+    $sql="SELECT DISTINCT * FROM matriculados_2022 ";
+    $alumnos=mysqli_query($con,$sql);
 
-    $total_alumnos=$query_alumnos->num_rows;
-    $total_docentes=$query_docente->num_rows;
+    $total_alumnos=$alumnos->num_rows;
+    $total_docentes=$docentes->num_rows;
     $num_max_alum=floor($total_alumnos/$total_docentes);
     $resto=$total_alumnos%$total_docentes;
-    $i=1;
-
-    $alumnos_sin_tutor=mysqli_fetch_all($query_alumnos_nuevos);
+    
     $data=array();
     $nuevos_alumnos=[];
     $nueva_distribucion=[];
-    while($row = mysqli_fetch_assoc($query_alumnos_con_tutor)) { 
+    while($row = mysqli_fetch_assoc($alumnos_con_tutor)) { 
         $cod_alumno=get_pref_cod($row['cod_estudiante']);
         $docente=$row['nombres_apellidos_docente'];
         if(count($data)==0 OR !array_key_exists($docente,$data) OR !array_key_exists($cod_alumno,$data[$docente])){
@@ -39,9 +47,9 @@ function distribucion_balanceada(){
             array_push($nueva_distribucion,[$row['cod_estudiante'],$row['nombres_apellidos'],$docente]);
             $data[ $row['nombres_apellidos_docente'] ][$cod_alumno]+=1;
         }
-        $i++;
     }
     $i=0;
+    $alumnos_sin_tutor=alumnos_sin_tutor();
     while( $i<count($alumnos_sin_tutor)) { 
         foreach($data as $docente =>$codigos){
             $cantidad=0;
@@ -62,15 +70,12 @@ function distribucion_balanceada(){
     }
     return $nueva_distribucion;
 }
-function no_matriculados(){
-    $con=conectar();
-    $sql="SELECT DISTINCT * FROM distribucion_tutoria D WHERE D.cod_estudiante not in( SELECT cod_estudiante FROM matriculados_2022 ); ";
-    $query=mysqli_query($con,$sql);
-    return $query;
-}
-function alumnos_sin_tutor(){
-    $con=conectar();
-    $sql="SELECT DISTINCT * FROM matriculados_2022  WHERE cod_estudiante not in( SELECT cod_estudiante FROM distribucion_tutoria ); ";
-    $query=mysqli_query($con,$sql);
+function mostrar_datos($data){
+    for($i=0;$i<count($data);$i++){
+        echo "<tr>";
+        echo "<td>".($i+1)."</td>";
+        foreach($data[$i] as $valor)echo "<td>".$valor."</td>";
+        echo "</tr>";
+    }
 }
 ?>

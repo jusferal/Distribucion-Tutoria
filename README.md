@@ -19,4 +19,6 @@
 ### Alumnos que no seran tutorados en 2022-1
 ![ScreenShot](https://github.com/wildkite/Distribucion-Tutoria/blob/main/screenshots/no_matriculados.png)
 ### Alumnos nuevos para tutoria
+![ScreenShot](https://github.com/wildkite/Distribucion-Tutoria/blob/main/screenshots/nuevos_alumnos.png)
+### Distribucion de tutorias
 ![ScreenShot](https://github.com/wildkite/Distribucion-Tutoria/blob/main/screenshots/nueva_distribucion.png)
